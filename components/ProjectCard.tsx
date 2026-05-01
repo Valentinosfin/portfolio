@@ -34,9 +34,10 @@ export function ProjectCard({ project, index, onOpen }: Props) {
         <div className="relative aspect-[16/10] overflow-hidden rounded-t-2xl border-b border-border">
           <Image
             src={project.image}
-            alt=""
+            alt={`${project.title} — preview`}
             width={800}
             height={500}
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/35 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />

@@ -114,9 +114,10 @@ export function ProjectModal({
             <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border">
               <Image
                 src={project.image}
-                alt=""
+                alt={`${project.title} — preview`}
                 width={800}
                 height={500}
+                sizes="(max-width: 640px) 100vw, 672px"
                 className="h-full w-full object-cover"
                 priority
               />

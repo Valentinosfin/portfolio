@@ -7,20 +7,24 @@ export type SectionBounds = { top: number; bottom: number };
 /** Document-space top/bottom; updates on resize / layout (not per scroll tick). */
 export function useSectionBounds(ref: RefObject<HTMLElement | null>) {
   const boundsRef = useRef<SectionBounds>({ top: 0, bottom: 0 });
+  const rafRef = useRef(0);
 
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
 
     function measure() {
-      const node = ref.current;
-      if (!node) return;
-      const rect = node.getBoundingClientRect();
-      const st = window.scrollY;
-      boundsRef.current = {
-        top: rect.top + st,
-        bottom: rect.bottom + st,
-      };
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const node = ref.current;
+        if (!node) return;
+        const rect = node.getBoundingClientRect();
+        const st = window.scrollY;
+        boundsRef.current = {
+          top: rect.top + st,
+          bottom: rect.bottom + st,
+        };
+      });
     }
 
     measure();
@@ -28,6 +32,7 @@ export function useSectionBounds(ref: RefObject<HTMLElement | null>) {
     ro.observe(el);
     window.addEventListener("resize", measure);
     return () => {
+      cancelAnimationFrame(rafRef.current);
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };

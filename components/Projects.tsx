@@ -1,13 +1,21 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { projects } from "@/lib/projects";
 import { Container } from "@/components/ui/Container";
 import { ParallaxSection } from "@/components/ParallaxSection";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectCard } from "@/components/ProjectCard";
-import { ProjectModal } from "@/components/ProjectModal";
 import type { Project } from "@/lib/projects";
+
+const ProjectModal = dynamic(
+  () =>
+    import("@/components/ProjectModal").then((mod) => ({
+      default: mod.ProjectModal,
+    })),
+  { ssr: false }
+);
 
 export function Projects() {
   const [selected, setSelected] = useState<Project | null>(null);

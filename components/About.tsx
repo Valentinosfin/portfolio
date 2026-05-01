@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
@@ -32,11 +33,13 @@ export function About() {
           >
             <div className="relative mx-auto aspect-[4/5] w-full max-w-[280px] overflow-hidden rounded-2xl border border-border bg-muted/40 lg:mx-0">
               {!imageError ? (
-                <img
+                <Image
                   src="/profile.jpg"
                   alt="Portrait of Valentinos Stylianou"
+                  width={560}
+                  height={700}
+                  sizes="(max-width: 1024px) 70vw, 280px"
                   className="h-full w-full object-cover"
-                  loading="lazy"
                   onError={() => setImageError(true)}
                 />
               ) : null}
