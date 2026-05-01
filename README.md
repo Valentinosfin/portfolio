@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Valentinos Stylianou — Portfolio
 
-## Getting Started
+Premium single-page portfolio built with **Next.js**, **Tailwind CSS**, **Framer Motion**, and **next-themes**.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 20+
+- npm
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.local.example` to `.env.local` and fill in:
 
-## Learn More
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata, Open Graph, `sitemap.xml`, and `robots.txt`. Use `http://localhost:3000` locally; set to your production URL on Vercel. |
+| `NEXT_PUBLIC_FORMSPREE_ENDPOINT` | Formspree JSON endpoint (`https://formspree.io/f/...`). Without it, the contact form explains how to configure it; email fallback still works. |
 
-To learn more about Next.js, take a look at the following resources:
+### Formspree setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create an account at [formspree.io](https://formspree.io).
+2. Create a new form and copy its endpoint URL (`/f/xxxxxxxx`).
+3. Set `NEXT_PUBLIC_FORMSPREE_ENDPOINT` in `.env.local` (and in Vercel project settings for production).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The contact form submits JSON with `name`, `email`, and `message`.
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Dev server |
+| `npm run build` | Production build |
+| `npm run start` | Start production server |
+| `npm run lint` | ESLint |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy (Vercel)
+
+1. Push the repo to GitHub/GitLab/Bitbucket **or** use the Vercel CLI (`vercel`).
+2. Import the project in the Vercel dashboard.
+3. Add environment variables (`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_FORMSPREE_ENDPOINT`).
+4. Deploy.
+
+## Project structure
+
+- `app/` — App Router routes, layout, global styles, SEO (`robots.ts`, `sitemap.ts`, `opengraph-image.tsx`).
+- `components/` — UI sections and primitives.
+- `lib/` — Content (`projects.ts`, `services.ts`) and `cn()` helper.
+- `public/projects/` — Placeholder artwork for project cards.
+
+## Customization
+
+- **Copy & projects:** Edit `lib/projects.ts` and `lib/services.ts`.
+- **Social links:** Update placeholders in `components/Footer.tsx`.
+- **Analytics:** Add your provider in `app/layout.tsx` or a dedicated client component.
+
+## License
+
+Private — All rights reserved.
