@@ -10,6 +10,7 @@ import {
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { clamp01, useSectionBounds } from "@/lib/use-section-bounds";
 
 const headline =
   "Websites and Automation Systems That Help Your Business Work Smarter";
@@ -18,32 +19,22 @@ export function Hero() {
   const reduceMotion = useReducedMotion();
   const words = headline.split(" ");
   const sectionRef = useRef<HTMLElement>(null);
+  const boundsRef = useSectionBounds(sectionRef);
+  const { scrollY } = useScroll();
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
+  /* Window scroll + measured hero bounds — reliable when target refs skip layout sync */
+  const heroT = useTransform(scrollY, (y) => {
+    if (reduceMotion === true) return 0;
+    const { top, bottom } = boundsRef.current;
+    const h = bottom - top;
+    if (h < 8) return 0;
+    return clamp01((y - top) / h);
   });
 
-  const gridY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, 140]
-  );
-  const orbBackY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, -100]
-  );
-  const orbFrontY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, -160]
-  );
-  const contentY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduceMotion ? [0, 0] : [0, -36]
-  );
+  const gridY = useTransform(heroT, [0, 1], reduceMotion === true ? [0, 0] : [0, 320]);
+  const orbBackY = useTransform(heroT, [0, 1], reduceMotion === true ? [0, 0] : [0, -220]);
+  const orbFrontY = useTransform(heroT, [0, 1], reduceMotion === true ? [0, 0] : [0, -300]);
+  const contentY = useTransform(heroT, [0, 1], reduceMotion === true ? [0, 0] : [0, -90]);
 
   return (
     <section
@@ -54,21 +45,24 @@ export function Hero() {
       <motion.div
         aria-hidden
         style={{ y: gridY }}
-        className="pointer-events-none absolute -inset-[30%] grid-bg opacity-70"
+        className="pointer-events-none absolute -inset-[30%] grid-bg opacity-70 will-change-transform transform-gpu"
       />
       <motion.div
         aria-hidden
         style={{ y: orbBackY }}
-        className="pointer-events-none absolute left-[12%] top-[18%] h-[min(520px,70vw)] w-[min(520px,70vw)] rounded-full bg-accent/[0.09] blur-3xl dark:bg-accent/[0.12]"
+        className="pointer-events-none absolute left-[12%] top-[18%] h-[min(520px,70vw)] w-[min(520px,70vw)] rounded-full bg-accent/[0.09] blur-3xl will-change-transform transform-gpu dark:bg-accent/[0.12]"
       />
       <motion.div
         aria-hidden
         style={{ y: orbFrontY }}
-        className="pointer-events-none absolute bottom-[8%] right-[8%] h-[min(380px,55vw)] w-[min(380px,55vw)] rounded-full bg-accent/[0.06] blur-3xl dark:bg-accent/[0.09]"
+        className="pointer-events-none absolute bottom-[8%] right-[8%] h-[min(380px,55vw)] w-[min(380px,55vw)] rounded-full bg-accent/[0.06] blur-3xl will-change-transform transform-gpu dark:bg-accent/[0.09]"
       />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      <motion.div style={{ y: contentY }}>
+      <motion.div
+        style={{ y: contentY }}
+        className="will-change-transform transform-gpu"
+      >
         <Container className="relative py-24 sm:py-28 lg:py-36">
           <div className="mx-auto max-w-4xl text-center">
             <motion.p
